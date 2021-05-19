@@ -1,0 +1,66 @@
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<GridPane fx:id="mainWindow" fx:controller="sample.Controller"
+          xmlns:fx="http://javafx.com/fxml" vgap="10">
+
+    <Label fx:id="leftLabel" GridPane.columnIndex="0">
+        <padding>
+            <Insets left="100"/>
+        </padding>
+        <font>
+            <Font size="15"/>
+        </font>
+    </Label>
+
+    <Label fx:id="rightLabel" GridPane.columnIndex="1">
+        <padding>
+            <Insets left="100"/>
+        </padding>
+        <font>
+            <Font size="15"/>
+        </font>
+    </Label>
+
+    <ListView fx:id="leftList" GridPane.rowIndex="1" GridPane.columnIndex="0" prefWidth="300"/>
+    <ListView fx:id="rightList" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="300"/>
+
+    <Label fx:id="leftSum" GridPane.rowIndex="2" GridPane.columnIndex="0">
+        <font>
+            <Font size="15"/>
+        </font>
+        <padding>
+            <Insets left="10"/>
+        </padding>
+    </Label>
+
+    <Label fx:id="rightSum" GridPane.rowIndex="2" GridPane.columnIndex="1">
+        <font>
+            <Font size="15"/>
+        </font>
+        <padding>
+            <Insets left="10"/>
+        </padding>
+    </Label>
+
+    <Separator GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+
+    <GridPane GridPane.rowIndex="4" GridPane.columnIndex="0" hgap="10" vgap="5">
+        <padding>
+            <Insets left="10" bottom="20"/>
+        </padding>
+        <Button text="Activities" prefWidth="80" onAction="#filterActivity"/>
+        <Button text="Food" GridPane.rowIndex="1" prefWidth="80" onAction="#filterFood"/>
+        <Button text="Furnishing" GridPane.rowIndex="2" prefWidth="80" onAction="#filterFurnish"/>
+        <Button text="Phone" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="80" onAction="#filterPhone"/>
+        <Button text="Rent" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="80" onAction="#filterRent"/>
+        <Button text="Travel" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="80" onAction="#filterTravel"/>
+        <Button text="Other" GridPane.rowIndex="0" GridPane.columnIndex="2" prefWidth="80" onAction="#filterOther"/>
+        <Button text="Show all" GridPane.rowIndex="1" GridPane.columnIndex="2" prefWidth="80" GridPane.rowSpan="2" prefHeight="80" onAction="#showAll"/>
+    </GridPane>
+</GridPane>
