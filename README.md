@@ -1,4 +1,4 @@
 # Purchase_Tracker
-A simple program to keep track of me and my partners expenses.
+A program i made to keep track of me and my partners expenses.
 
 
