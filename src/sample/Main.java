@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class Main extends Application {
 
-    public static Stage stage;
+    private static Stage stage;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -57,5 +57,9 @@ public class Main extends Application {
     @Override
     public void init() {
         Data.getInstance().loadData();
+    }
+
+    public static Stage getStage() {
+        return stage;
     }
 }
