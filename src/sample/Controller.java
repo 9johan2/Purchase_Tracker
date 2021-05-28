@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -7,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-
 import sample.datamodel.Data;
 import sample.datamodel.Item;
 
@@ -84,6 +84,7 @@ public class Controller {
             if (item != null) {
                 johansItems.add(item);
                 updateSum();
+                Data.getInstance().setChanged();
             }
         });
 
@@ -94,6 +95,7 @@ public class Controller {
             if (item != null) {
                 janasItems.add(item);
                 updateSum();
+                Data.getInstance().setChanged();
             }
         });
             // Creating alert to show in case of error
@@ -109,6 +111,7 @@ public class Controller {
             if (item != null) {
                 johansItems.remove(item);
                 updateSum();
+                Data.getInstance().setChanged();
             } else {
                 alert.showAndWait();
             }
@@ -121,6 +124,7 @@ public class Controller {
             if (item != null) {
                 janasItems.remove(item);
                 updateSum();
+                Data.getInstance().setChanged();
             } else {
                 alert.showAndWait();
             }
@@ -246,5 +250,80 @@ public class Controller {
         filteredJana.setPredicate(wantOther);
         filteredJohan.setPredicate(wantOther);
         updateSum();
+    }
+
+    @FXML
+    public void newFile() {
+
+        if (Data.getInstance().isChanged()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Save changes?");
+            alert.setHeaderText(null);
+            alert.setContentText("Would you like to save your changes first?" + "\nAny unsaved changes will be lost.");
+            alert.getButtonTypes().remove(ButtonType.OK);
+            alert.getButtonTypes().add(ButtonType.YES);
+            alert.getButtonTypes().add(ButtonType.NO);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get().equals(ButtonType.YES)) {
+                save();
+                johansItems.clear();
+                janasItems.clear();
+                Data.getInstance().newFile();
+                updateSum();
+            } else if (result.isPresent() && result.get().equals(ButtonType.NO)) {
+                johansItems.clear();
+                janasItems.clear();
+                Data.getInstance().newFile();
+                updateSum();
+            }
+        } else {
+            johansItems.clear();
+            janasItems.clear();
+            Data.getInstance().newFile();
+            updateSum();
+        }
+
+    }
+
+    @FXML
+    public void openFile() {
+        Data.getInstance().openFile();
+        updateSum();
+    }
+
+    @FXML
+    public void save() {
+        System.out.println("save() accessed");
+        Data.getInstance().saveData();
+    }
+
+    @FXML
+    public void saveAs() {
+        Data.getInstance().saveAs();
+    }
+
+    @FXML
+    public void exit() {
+        if (Data.getInstance().isChanged()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Save changes?");
+            alert.setHeaderText(null);
+            alert.setContentText("Would you like to save your changes before quitting?" + "\nAny unsaved changes will be lost.");
+            alert.getButtonTypes().remove(ButtonType.OK);
+            alert.getButtonTypes().add(ButtonType.YES);
+            alert.getButtonTypes().add(ButtonType.NO);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get().equals(ButtonType.YES)) {
+                save();
+                Platform.exit();
+                System.out.println("Save and exit");
+            } else if (result.isPresent() && result.get().equals(ButtonType.NO)) {
+                Platform.exit();
+                System.out.println("Exit without saving");
+            }
+        }
+
     }
 }

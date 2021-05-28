@@ -6,10 +6,25 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <GridPane fx:id="mainWindow" fx:controller="sample.Controller"
           xmlns:fx="http://javafx.com/fxml" vgap="10">
 
-    <Label fx:id="leftLabel" GridPane.columnIndex="0">
+    <MenuBar GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2">
+        <Menu text="File" >
+            <MenuItem text="New" onAction="#newFile"/>
+            <MenuItem text="Open" onAction="#openFile"/>
+            <MenuItem text="Save" onAction="#save"/>
+            <MenuItem text="Save As" onAction="#saveAs"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="Exit" onAction="#exit"/>
+        </Menu>
+    </MenuBar>
+
+    <Label fx:id="leftLabel" GridPane.rowIndex="1" GridPane.columnIndex="0">
         <padding>
             <Insets left="100"/>
         </padding>
@@ -18,7 +33,7 @@
         </font>
     </Label>
 
-    <Label fx:id="rightLabel" GridPane.columnIndex="1">
+    <Label fx:id="rightLabel" GridPane.rowIndex="1" GridPane.columnIndex="1">
         <padding>
             <Insets left="100"/>
         </padding>
@@ -27,10 +42,10 @@
         </font>
     </Label>
 
-    <ListView fx:id="leftList" GridPane.rowIndex="1" GridPane.columnIndex="0" prefWidth="300"/>
-    <ListView fx:id="rightList" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="300"/>
+    <ListView fx:id="leftList" GridPane.rowIndex="2" GridPane.columnIndex="0" prefWidth="300"/>
+    <ListView fx:id="rightList" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="300"/>
 
-    <Label fx:id="leftSum" GridPane.rowIndex="2" GridPane.columnIndex="0">
+    <Label fx:id="leftSum" GridPane.rowIndex="3" GridPane.columnIndex="0">
         <font>
             <Font size="15"/>
         </font>
@@ -39,7 +54,7 @@
         </padding>
     </Label>
 
-    <Label fx:id="rightSum" GridPane.rowIndex="2" GridPane.columnIndex="1">
+    <Label fx:id="rightSum" GridPane.rowIndex="3" GridPane.columnIndex="1">
         <font>
             <Font size="15"/>
         </font>
@@ -48,9 +63,9 @@
         </padding>
     </Label>
 
-    <Separator GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+    <Separator GridPane.rowIndex="4" GridPane.columnSpan="2"/>
 
-    <GridPane GridPane.rowIndex="4" GridPane.columnIndex="0" hgap="10" vgap="5">
+    <GridPane GridPane.rowIndex="5" GridPane.columnIndex="0" hgap="10" vgap="5">
         <padding>
             <Insets left="10" bottom="20"/>
         </padding>
