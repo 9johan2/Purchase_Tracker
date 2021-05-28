@@ -60,7 +60,7 @@ public class Data {
     }
 
     public void saveAs() {
-        file = fileChooser.showSaveDialog(Main.stage);
+        file = fileChooser.showSaveDialog(Main.getStage());
         if (file != null) {
             try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
                 ArrayList<Item> johansList = new ArrayList<>(johansItems);
@@ -99,7 +99,7 @@ public class Data {
     }
 
     public void openFile() {
-        file = fileChooser.showOpenDialog(Main.stage);
+        file = fileChooser.showOpenDialog(Main.getStage());
         if (file != null) {
             try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
                 List<Item> loadJohan = (List<Item>) ois.readObject();
