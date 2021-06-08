@@ -78,6 +78,7 @@ public class Data {
         }
     }
 
+    // Opens the default file during startup
     public void loadData() {
 
         try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("C:\\Java Programs\\My Programs\\Economy\\data.dat"))) {
@@ -89,7 +90,10 @@ public class Data {
             fileChooser.setInitialDirectory(file.getParentFile());
             changed = false;
 
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
+            newFile();
+        }
+        catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
