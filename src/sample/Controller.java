@@ -54,6 +54,8 @@ public class Controller {
     private Predicate<Item> wantOther;
     private Predicate<Item> wantAll;
 
+    private Alert unsavedChangesAlert;
+
     public void initialize() {
 
         // Create list that can be filtered by categories and sorted by date of purchase
@@ -70,6 +72,14 @@ public class Controller {
         rightList.setItems(sortedJana);
         rightLabel.setText("Jana");
         updateSum();
+
+        unsavedChangesAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        unsavedChangesAlert.setTitle("Save changes?");
+        unsavedChangesAlert.setHeaderText(null);
+        unsavedChangesAlert.setContentText("Would you like to save your changes first?" + "\nAny unsaved changes will be lost.");
+        unsavedChangesAlert.getButtonTypes().remove(ButtonType.OK);
+        unsavedChangesAlert.getButtonTypes().add(ButtonType.YES);
+        unsavedChangesAlert.getButtonTypes().add(ButtonType.NO);
 
         addContextMenu();
         addPredicates();
@@ -98,7 +108,7 @@ public class Controller {
                 Data.getInstance().setChanged();
             }
         });
-            // Creating alert to show in case of error
+            // Creating alert to show in case no item is selected when calling delete
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Error");
         alert.setHeaderText(null);
@@ -160,6 +170,7 @@ public class Controller {
         rightSum.setText("Sum: " + String.format("%.2f", janaSum));
     }
 
+    // Will return an Item to add to the lists via the context menu.
     @FXML
     private Item addPurchase() {
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -168,7 +179,6 @@ public class Controller {
 
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("purchaseDialog.fxml"));
-
 
         try {
             dialog.getDialogPane().setContent(fxmlLoader.load());
@@ -181,18 +191,11 @@ public class Controller {
 
         PurchaseDialogController controller = fxmlLoader.getController();
         Optional<ButtonType> result = dialog.showAndWait();
+
         if (result.isPresent() && result.get().equals(ButtonType.OK)) {
-            Item item = controller.newItem();
-            if (item != null) {
-                return item;
-            } else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Invalid item");
-                alert.setHeaderText(null);
-                alert.setContentText("Invalid item");
-                alert.showAndWait();
-            }
+            return controller.newItem(); // Check for item == null not required, its handled by PurchaseDialogController.newItem().
         }
+
         return null;
     }
 
@@ -252,19 +255,13 @@ public class Controller {
         updateSum();
     }
 
+    // Will clear the listViews and set current file == null
     @FXML
     public void newFile() {
 
         if (Data.getInstance().isChanged()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Save changes?");
-            alert.setHeaderText(null);
-            alert.setContentText("Would you like to save your changes first?" + "\nAny unsaved changes will be lost.");
-            alert.getButtonTypes().remove(ButtonType.OK);
-            alert.getButtonTypes().add(ButtonType.YES);
-            alert.getButtonTypes().add(ButtonType.NO);
 
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = unsavedChangesAlert.showAndWait();
             if (result.isPresent() && result.get().equals(ButtonType.YES)) {
                 save();
                 johansItems.clear();
@@ -283,13 +280,27 @@ public class Controller {
             Data.getInstance().newFile();
             updateSum();
         }
-
     }
+
 
     @FXML
     public void openFile() {
-        Data.getInstance().openFile();
-        updateSum();
+        if (Data.getInstance().isChanged()) {
+
+            Optional<ButtonType> result = unsavedChangesAlert.showAndWait();
+            if (result.isPresent() && result.get().equals(ButtonType.YES)) {
+                save();
+                Data.getInstance().openFile();
+                updateSum();
+
+            } else if (result.isPresent() && result.get().equals(ButtonType.NO)) {
+                Data.getInstance().openFile();
+                updateSum();
+            }
+        } else {
+            Data.getInstance().openFile();
+            updateSum();
+        }
     }
 
     @FXML
@@ -306,15 +317,8 @@ public class Controller {
     @FXML
     public void exit() {
         if (Data.getInstance().isChanged()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Save changes?");
-            alert.setHeaderText(null);
-            alert.setContentText("Would you like to save your changes before quitting?" + "\nAny unsaved changes will be lost.");
-            alert.getButtonTypes().remove(ButtonType.OK);
-            alert.getButtonTypes().add(ButtonType.YES);
-            alert.getButtonTypes().add(ButtonType.NO);
 
-            Optional<ButtonType> result = alert.showAndWait();
+            Optional<ButtonType> result = unsavedChangesAlert.showAndWait();
             if (result.isPresent() && result.get().equals(ButtonType.YES)) {
                 save();
                 Platform.exit();
@@ -323,6 +327,8 @@ public class Controller {
                 Platform.exit();
                 System.out.println("Exit without saving");
             }
+        } else {
+            Platform.exit();
         }
 
     }
